@@ -1,176 +1,1174 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aeronautical Knowledge Wizard</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>RPLA MOS Knowledge Assessment</title>
+        <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .gradient-bg {
+            background: linear-gradient(to bottom, #ff69b4, #8a2be2);
+        }
+        .hover-gradient:hover {
+            background: linear-gradient(to right, #ff1493, #9400d3);
+        }
+    </style>
 </head>
-<body class="bg-gray-100 text-gray-800">
-    <div class="max-w-4xl mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
-        <h1 class="text-3xl font-bold text-center mb-6">Aeronautical Knowledge Wizard</h1>
-        <form id="wizardForm">
-            <!-- Step 1 -->
-            <div class="step active">
-                <h2 class="text-2xl font-semibold mb-4">Basic Aeronautical Knowledge</h2>
-                <div class="mb-4">
-                    <label class="block text-sm font-medium mb-2">Describe direction using the following methods:</label>
-                    <textarea id="directionMethods" name="directionMethods" class="w-full p-2 border rounded" rows="4"></textarea>
-                    <p id="directionMethodsError" class="text-sm text-red-600 hidden">Please include at least "clock code".</p>
-                </div>
-                <div class="mb-4">
-                    <label class="block text-sm font-medium mb-2">Define the meaning of aircraft heading (HDG):</label>
-                    <textarea id="aircraftHeading" name="aircraftHeading" class="w-full p-2 border rounded" rows="2"></textarea>
-                    <p id="aircraftHeadingError" class="text-sm text-red-600 hidden">Answer must include "direction".</p>
-                </div>
-                <div class="mb-4">
-                    <label class="block text-sm font-medium mb-2">Differentiate between true (T), magnetic (M), and compass (C) headings:</label>
-                    <textarea id="headingTypes" name="headingTypes" class="w-full p-2 border rounded" rows="4"></textarea>
-                    <p id="headingTypesError" class="text-sm text-red-600 hidden">Ensure to include all three types: "true", "magnetic", and "compass".</p>
-                </div>
-            </div>
+<body class="bg-gray-100">
+    <!-- Navigation Menu with updated styling -->
+    <nav id="categoryNav" class="fixed top-0 left-0 h-full w-64 gradient-bg text-white p-4 transform -translate-x-full transition-transform duration-200 ease-in-out shadow-xl">
+        <h2 class="text-xl font-bold mb-4 text-white">Categories</h2>
+        <div id="categoryList" class="space-y-2">
+            <!-- Categories will be populated here -->
+        </div>
+    </nav>
 
-            <!-- Step 2 -->
-            <div class="step hidden">
-                <h2 class="text-2xl font-semibold mb-4">Power Plants and Systems</h2>
-                <div class="mb-4">
-                    <label class="block text-sm font-medium mb-2">Describe the operation of a 4-stroke cycle internal combustion engine:</label>
-                    <textarea id="engineOperation" name="engineOperation" class="w-full p-2 border rounded" rows="4"></textarea>
-                    <p id="engineOperationError" class="text-sm text-red-600 hidden">Include "intake", "compression", "power", and "exhaust".</p>
+    <!-- Main Content -->
+    <div class="ml-0 transition-margin duration-200 ease-in-out">
+        <!-- Header Bar -->
+        <div class="bg-white shadow-md p-4 fixed top-0 w-full z-10">
+            <div class="max-w-7xl mx-auto flex justify-between items-center">
+                <div class="flex items-center">
+                    <button onclick="toggleNav()" class="text-pink-500 hover:text-purple-600 mr-4 transition-colors duration-200">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"/>
+                        </svg>
+                    </button>
+                    <h1 class="text-2xl font-bold bg-gradient-to-r from-pink-500 to-purple-600 text-transparent bg-clip-text">Destroy The RPLA (I pity the fool)</h1>
                 </div>
-                <div class="mb-4">
-                    <label class="block text-sm font-medium mb-2">State the effect of increasing altitude and temperature on engine performance:</label>
-                    <textarea id="altitudeEffect" name="altitudeEffect" class="w-full p-2 border rounded" rows="2"></textarea>
-                    <p id="altitudeEffectError" class="text-sm text-red-600 hidden">Answer must mention "decrease in power".</p>
-                </div>
-                <div class="mb-4">
-                    <label class="block text-sm font-medium mb-2">Describe the purpose of the carburetor and throttle:</label>
-                    <textarea id="carbThrottle" name="carbThrottle" class="w-full p-2 border rounded" rows="4"></textarea>
-                    <p id="carbThrottleError" class="text-sm text-red-600 hidden">Include explanations for both "carburetor" and "throttle".</p>
+                <div class="flex items-center space-x-4">
+                    <div id="timer" class="text-xl font-bold text-pink-600">00:00:00</div>
+                    <div id="scoreDisplay" class="text-lg font-semibold text-purple-600">Score: 0/0</div>
                 </div>
             </div>
+        </div>
 
-            <!-- Step 3 -->
-            <div class="step hidden">
-                <h2 class="text-2xl font-semibold mb-4">Aerodynamics</h2>
-                <div class="mb-4">
-                    <label class="block text-sm font-medium mb-2">Explain the relationship between lift, drag, and airspeed:</label>
-                    <textarea id="liftDragAirspeed" name="liftDragAirspeed" class="w-full p-2 border rounded" rows="4"></textarea>
-                    <p id="liftDragAirspeedError" class="text-sm text-red-600 hidden">Answer must discuss all three: "lift", "drag", and "airspeed".</p>
-                </div>
-                <div class="mb-4">
-                    <label class="block text-sm font-medium mb-2">State how angle of attack affects lift and drag:</label>
-                    <textarea id="angleOfAttack" name="angleOfAttack" class="w-full p-2 border rounded" rows="3"></textarea>
-                    <p id="angleOfAttackError" class="text-sm text-red-600 hidden">Mention the increase in "lift" and "drag" with angle of attack.</p>
-                </div>
-            </div>
+        <!-- Progress Bar -->
+        <div class="fixed top-16 w-full bg-gray-200 h-2">
+            <div id="progressBar" class="bg-gradient-to-r from-pink-500 to-purple-600 h-2 transition-all duration-300" style="width: 0%"></div>
+        </div>
 
-            <!-- Step 4 -->
-            <div class="step hidden">
-                <h2 class="text-2xl font-semibold mb-4">Navigation</h2>
-                <div class="mb-4">
-                    <label class="block text-sm font-medium mb-2">Identify major features displayed on visual charts:</label>
-                    <textarea id="visualCharts" name="visualCharts" class="w-full p-2 border rounded" rows="3"></textarea>
-                    <p id="visualChartsError" class="text-sm text-red-600 hidden">Answer should include "controlled airspace" and "terrain".</p>
-                </div>
-                <div class="mb-4">
-                    <label class="block text-sm font-medium mb-2">State the charts used for identifying controlled airspace:</label>
-                    <textarea id="controlledAirspace" name="controlledAirspace" class="w-full p-2 border rounded" rows="2"></textarea>
-                    <p id="controlledAirspaceError" class="text-sm text-red-600 hidden">Mention at least one example, such as "VTC".</p>
-                </div>
-            </div>
+        <!-- Main Content Container -->
+        <div class="pt-24 px-4">
+            <div class="max-w-7xl mx-auto flex flex-col lg:flex-row gap-6">
+                <!-- Quiz Section -->
+                <div class="lg:w-2/3">
+                    <div id="app" class="bg-white rounded-lg shadow-lg p-6">
+                        <!-- Section Summary Card -->
+                        <div id="sectionSummary" class="mb-6 p-4 bg-pink-50 rounded-lg hidden border border-pink-200">
+                            <h3 class="text-lg font-semibold text-purple-800 mb-2">Section Summary</h3>
+                            <div id="summaryContent" class="text-sm text-pink-600"></div>
+                        </div>
 
-            <!-- Step 5 -->
-            <div class="step hidden">
-                <h2 class="text-2xl font-semibold mb-4">Human Factors</h2>
-                <div class="mb-4">
-                    <label class="block text-sm font-medium mb-2">Describe the effects of dehydration on pilot performance:</label>
-                    <textarea id="dehydrationEffects" name="dehydrationEffects" class="w-full p-2 border rounded" rows="4"></textarea>
-                    <p id="dehydrationEffectsError" class="text-sm text-red-600 hidden">Answer should include "fatigue" and "reduced concentration".</p>
-                </div>
-                <div class="mb-4">
-                    <label class="block text-sm font-medium mb-2">List two ways to combat stress during flight:</label>
-                    <textarea id="combatStress" name="combatStress" class="w-full p-2 border rounded" rows="2"></textarea>
-                    <p id="combatStressError" class="text-sm text-red-600 hidden">Provide at least two methods, e.g., "deep breathing" or "adequate rest".</p>
-                </div>
-            </div>
+                        <div id="sectionContainer" class="mb-4">
+                            <!-- Questions will be inserted here -->
+                        </div>
 
-            <!-- Buttons -->
-            <div class="flex justify-between mt-6">
-                <button type="button" id="prevBtn" class="hidden bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded" onclick="nextPrev(-1)">Previous</button>
-                <button type="button" id="nextBtn" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded" onclick="nextPrev(1)">Next</button>
+                        <div class="flex justify-between mt-6">
+                            <button onclick="prevSection()" id="prevButton" 
+                                    class="flex items-center px-4 py-2 rounded gradient-bg hover-gradient text-white transition-colors duration-200">
+                                ← Previous
+                            </button>
+                            
+                            <button onclick="checkAnswers()" 
+                                    class="px-4 py-2 bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white rounded transition-colors duration-200">
+                                Check Answers
+                            </button>
+
+                            <button onclick="nextSection()" id="nextButton" 
+                                    class="flex items-center px-4 py-2 rounded gradient-bg hover-gradient text-white transition-colors duration-200">
+                                Next →
+                            </button>
+                        </div>
+                        
+                        <div id="progress" class="mt-4 text-sm text-purple-600 text-center"></div>
+                    </div>
+                </div>
+
+                <!-- Meme Image Section -->
+                <div class="lg:w-1/3 lg:sticky lg:top-24 h-fit">
+                    <div class="bg-white rounded-lg shadow-lg p-4">
+                        <img src="memes/collage.png" alt="RPLA Memes" class="w-full h-auto rounded-lg">
+                    </div>
+                </div>
             </div>
-        </form>
+        </div>
     </div>
 
-    <script>
-        let currentStep = 0;
-        const steps = document.querySelectorAll('.step');
 
-        function showStep(n) {
-            steps.forEach((step, index) => step.classList.toggle('hidden', index !== n));
-            document.getElementById('prevBtn').classList.toggle('hidden', n === 0);
-            document.getElementById('nextBtn').textContent = n === steps.length - 1 ? 'Submit' : 'Next';
-        }
-
-        function validateStep() {
-            let valid = true;
-
-            const validations = [
-                // Step 1 validations
-                () => validateField('directionMethods', 'clock code', 'directionMethodsError'),
-                () => validateField('aircraftHeading', 'direction', 'aircraftHeadingError'),
-                () => validateField('headingTypes', 'true magnetic compass', 'headingTypesError', true),
-
-                // Step 2 validations
-                () => validateField('engineOperation', 'intake compression power exhaust', 'engineOperationError', true),
-                () => validateField('altitudeEffect', 'decrease in power', 'altitudeEffectError'),
-                () => validateField('carbThrottle', 'carburetor throttle', 'carbThrottleError', true),
-
-                // Step 3 validations
-                () => validateField('liftDragAirspeed', 'lift drag airspeed', 'liftDragAirspeedError', true),
-                () => validateField('angleOfAttack', 'lift drag', 'angleOfAttackError', true),
-
-                // Step 4 validations
-                () => validateField('visualCharts', 'controlled airspace terrain', 'visualChartsError', true),
-                () => validateField('controlledAirspace', 'vtc', 'controlledAirspaceError'),
-
-                // Step 5 validations
-                () => validateField('dehydrationEffects', 'fatigue reduced concentration', 'dehydrationEffectsError', true),
-                () => validateField('combatStress', 'deep breathing adequate rest', 'combatStressError', true),
+        <script>
+            // Previous sections array remains the same
+            const sections = [
+                {
+                    title: "2.1 Terminology - Direction",
+                    questions: [
+                        {
+                            id: "2.1.1a",
+                            text: "How do you describe direction as a 3 figure group?",
+                            required: ["degrees", "3 digits"]
+                        },
+                        {
+                            id: "2.1.1b",
+                            text: "How do you describe direction as a 2 figure group?",
+                            required: ["degrees", "2 digits"]
+                        },
+                        {
+                            id: "2.1.1c",
+                            text: "How do you describe direction in the clock code?",
+                            required: ["clock", "position"]
+                        },
+                        {
+                            id: "2.1.2",
+                            text: "Define aircraft heading (HDG).",
+                            required: ["direction", "nose", "aircraft"]
+                        },
+                        {
+                            id: "2.1.3a",
+                            text: "What is true (T) direction?",
+                            required: ["true north", "reference"]
+                        },
+                        {
+                            id: "2.1.3b",
+                            text: "What is magnetic (M) direction?",
+                            required: ["magnetic north", "reference"]
+                        },
+                        {
+                            id: "2.1.3c",
+                            text: "What is compass (C) direction?",
+                            required: ["compass", "reading"]
+                        }
+                    ]
+                },
+                {
+                    title: "2.2 Distance, Speed and Velocity",
+                    questions: [
+                        {
+                            id: "2.2.1a",
+                            text: "What units are used for lateral distance in navigation?",
+                            required: ["nautical miles", "nm"]
+                        },
+                        {
+                            id: "2.2.1b",
+                            text: "What units are used for visibility?",
+                            required: ["kilometers", "meters"]
+                        },
+                        {
+                            id: "2.2.2",
+                            text: "Define knot (kt) when used to express aircraft speed.",
+                            required: ["nautical", "mile", "hour"]
+                        },
+                        {
+                            id: "2.2.3",
+                            text: "Define wind velocity (W/V).",
+                            required: ["direction", "speed"]
+                        },
+                        {
+                            id: "2.2.4a",
+                            text: "What is IAS (Indicated Airspeed)?",
+                            required: ["indicated", "airspeed", "instrument"]
+                        },
+                        {
+                            id: "2.2.4b",
+                            text: "What is CAS (Calibrated Airspeed)?",
+                            required: ["calibrated", "corrected", "errors"]
+                        },
+                        {
+                            id: "2.2.4c",
+                            text: "What is TAS (True Airspeed)?",
+                            required: ["true", "actual", "air mass"]
+                        },
+                        {
+                            id: "2.2.4d",
+                            text: "What is GS (Ground Speed)?",
+                            required: ["actual", "speed", "ground"]
+                        }
+                    ]
+                },
+                {
+                    title: "2.3 Time",
+                    questions: [
+                        {
+                            id: "2.3.1",
+                            text: "How do you express time as a 4 figure group (24 hour time)?",
+                            required: ["24", "hour", "system"]
+                        },
+                        {
+                            id: "2.3.2",
+                            text: "How do you convert local standard time to UTC?",
+                            required: ["add", "subtract", "difference"]
+                        },
+                        {
+                            id: "2.3.3",
+                            text: "How do you convert UTC to local standard time?",
+                            required: ["add", "subtract", "difference"]
+                        }
+                    ]
+                },
+                {
+                    title: "2.4 Units of Measurement",
+                    questions: [
+                        {
+                            id: "2.4.1a",
+                            text: "What are the units used to describe height and how is it different from altitude and elevation?",
+                            required: ["above", "ground", "level", "agl"]
+                        },
+                        {
+                            id: "2.4.1b",
+                            text: "What are the units used to describe altitude and how is it different from height and elevation?",
+                            required: ["above", "mean", "sea", "level", "amsl"]
+                        },
+                        {
+                            id: "2.4.1c",
+                            text: "What are the units used to describe elevation and how is it different from height and altitude?",
+                            required: ["surface", "point", "msl"]
+                        },
+                        {
+                            id: "2.4.2a",
+                            text: "What units are used to express runway dimensions?",
+                            required: ["meters"]
+                        },
+                        {
+                            id: "2.4.2b",
+                            text: "What units are used to express temperature?",
+                            required: ["celsius", "degrees"]
+                        },
+                        {
+                            id: "2.4.2c",
+                            text: "What units are used to express atmospheric pressure?",
+                            required: ["hectopascals", "hpa"]
+                        },
+                        {
+                            id: "2.4.2d",
+                            text: "What units are used to express weight?",
+                            required: ["kilograms", "kg"]
+                        },
+                        {
+                            id: "2.4.2e",
+                            text: "What units are used to express volume (liquids)?",
+                            required: ["litres", "liters"]
+                        },
+                        {
+                            id: "2.4.2f",
+                            text: "What units are used to express visibility?",
+                            required: ["kilometers", "meters"]
+                        }
+                    ]
+                },
+                {
+                    title: "2.5 Basic Physics",
+                    questions: [
+                        {
+                            id: "2.5.1",
+                            text: "Describe the meaning of kinetic and potential energy and their relationship to basic aircraft operations.",
+                            required: ["movement", "position", "height", "energy"]
+                        },
+                        {
+                            id: "2.5.2",
+                            text: "Describe the meaning of 'aircraft energy state' with respect to kinetic and potential energy.",
+                            required: ["speed", "height", "combination"]
+                        },
+                        {
+                            id: "2.5.3",
+                            text: "Describe the effects on 'aircraft energy state' of acceleration, deceleration, climb and descent.",
+                            required: ["kinetic", "potential", "changes", "energy"]
+                        }
+                    ]
+                },
+                {
+                    title: "3.1 Piston Engine Aircraft - Basic Components",
+                    questions: [
+                        {
+                            id: "3.1.1a",
+                            text: "Describe the basic principle of operation of a 4 stroke cycle internal combustion engine and state the function of cylinders.",
+                            required: ["combustion", "chamber", "pressure", "contain"]
+                        },
+                        {
+                            id: "3.1.1b",
+                            text: "State the purpose and function of pistons.",
+                            required: ["compress", "power", "movement", "transfer"]
+                        },
+                        {
+                            id: "3.1.1c",
+                            text: "State the purpose and function of piston rings.",
+                            required: ["seal", "compression", "oil", "prevent"]
+                        },
+                        {
+                            id: "3.1.1d",
+                            text: "State the purpose and function of inlet/exhaust valves.",
+                            required: ["control", "flow", "gases", "timing"]
+                        },
+                        {
+                            id: "3.1.1e",
+                            text: "State the purpose and function of the crank shaft.",
+                            required: ["convert", "motion", "rotary", "power"]
+                        },
+                        {
+                            id: "3.1.1f",
+                            text: "State the purpose and function of the cam shaft.",
+                            required: ["valve", "timing", "operation", "control"]
+                        },
+                        {
+                            id: "3.1.1g",
+                            text: "State the purpose and function of spark plugs.",
+                            required: ["ignite", "mixture", "spark", "combustion"]
+                        }
+                    ]
+                },
+                {
+                    title: "3.1 Engine Performance Factors",
+                    questions: [
+                        {
+                            id: "3.1.2a",
+                            text: "Describe the effect of increasing altitude on engine performance.",
+                            required: ["power", "decrease", "density", "air"]
+                        },
+                        {
+                            id: "3.1.2b",
+                            text: "Describe the effect of increasing temperature on engine performance.",
+                            required: ["power", "decrease", "density", "efficiency"]
+                        },
+                        {
+                            id: "3.1.3a",
+                            text: "State the function of the carburettor.",
+                            required: ["mixture", "fuel", "air", "ratio"]
+                        },
+                        {
+                            id: "3.1.3b",
+                            text: "State the function of the throttle.",
+                            required: ["control", "power", "airflow", "mixture"]
+                        }
+                    ]
+                },
+                {
+                    title: "3.1 Engine Systems and Components",
+                    questions: [
+                        {
+                            id: "3.1.3c",
+                            text: "State the function of magneto, dual ignition.",
+                            required: ["spark", "redundancy", "ignition", "system"]
+                        },
+                        {
+                            id: "3.1.3d",
+                            text: "State the function of the alternator.",
+                            required: ["electrical", "power", "generation", "charge"]
+                        },
+                        {
+                            id: "3.1.3e",
+                            text: "State the function of the battery, battery compartment vent.",
+                            required: ["power", "storage", "gases", "ventilation"]
+                        },
+                        {
+                            id: "3.1.3f",
+                            text: "State the function of the propeller.",
+                            required: ["thrust", "convert", "power", "rotation"]
+                        },
+                        {
+                            id: "3.1.3g",
+                            text: "State the function of circuit breaker, fuse, bus bar.",
+                            required: ["protection", "electrical", "circuit", "overload"]
+                        }
+                    ]
+                },
+                {
+                    title: "3.1 Engine Monitoring",
+                    questions: [
+                        {
+                            id: "3.1.4a",
+                            text: "State the purpose and importance of monitoring RPM (tachometer).",
+                            required: ["speed", "engine", "limits", "power"]
+                        },
+                        {
+                            id: "3.1.4b",
+                            text: "State the purpose and importance of monitoring CHT and EGT.",
+                            required: ["temperature", "cylinder", "exhaust", "operation"]
+                        },
+                        {
+                            id: "3.1.4c",
+                            text: "State the purpose and importance of monitoring voltmeter, ammeter, loadmeter.",
+                            required: ["electrical", "system", "charging", "load"]
+                        },
+                        {
+                            id: "3.1.4d",
+                            text: "State the purpose and importance of monitoring fuel pressure.",
+                            required: ["fuel", "supply", "pressure", "system"]
+                        },
+                        {
+                            id: "3.1.4e",
+                            text: "State the purpose and importance of monitoring oil temperature and pressure.",
+                            required: ["lubrication", "cooling", "engine", "health"]
+                        }
+                    ]
+                },
+                {
+                    title: "3.1 Engine Systems and Operation",
+                    questions: [
+                        {
+                            id: "3.1.5",
+                            text: "Describe the purpose and function of an engine lubrication system in relation to engine cooling.",
+                            required: ["cooling", "lubrication", "friction", "heat"]
+                        },
+                        {
+                            id: "3.1.6",
+                            text: "State the purpose of mixture control and describe the effect of excessively rich and lean mixture strengths.",
+                            required: ["fuel", "air", "ratio", "performance"]
+                        },
+                        {
+                            id: "3.1.7",
+                            text: "Describe the advantages and disadvantages of a simple carburettor and a direct injection system.",
+                            required: ["efficiency", "complexity", "reliability", "control"]
+                        }
+                    ]
+                },
+                {
+                    title: "3.2 Fuels and Oils",
+                    questions: [
+                        {
+                            id: "3.2.1a",
+                            text: "Describe the sources of fuel contamination.",
+                            required: ["water", "dirt", "rust", "storage"]
+                        },
+                        {
+                            id: "3.2.1b",
+                            text: "Describe the advantages and disadvantages of fuelling prior to overnight parking.",
+                            required: ["condensation", "weight", "safety"]
+                        },
+                        {
+                            id: "3.2.1c",
+                            text: "How do you identify different grades of aviation fuel?",
+                            required: ["color", "markings", "octane"]
+                        },
+                        {
+                            id: "3.2.1d",
+                            text: "Describe the hazards/problems with mixing different hydraulic fluids and using incorrect grades of fuel.",
+                            required: ["contamination", "failure", "damage", "system"]
+                        }
+                    ]
+                },
+                {
+                    title: "3.3 Engine Handling",
+                    questions: [
+                        {
+                            id: "3.3.1",
+                            text: "State the causes and effects of detonation, limited to improper use of mixture control, MP/RPM, and use of incorrect fuel octane.",
+                            required: ["pre-ignition", "knocking", "damage", "temperature"]
+                        },
+                        {
+                            id: "3.3.2a",
+                            text: "Describe the effect on an engine of prolonged idling.",
+                            required: ["fouling", "plugs", "temperature", "cooling"]
+                        },
+                        {
+                            id: "3.3.2b",
+                            text: "Describe the effect on an engine of using incorrect mixture settings in flight.",
+                            required: ["power", "temperature", "fuel", "consumption"]
+                        },
+                        {
+                            id: "3.3.3a",
+                            text: "State reasons for minimum oil pressure limitations.",
+                            required: ["lubrication", "bearings", "damage", "wear"]
+                        },
+                        {
+                            id: "3.3.3b",
+                            text: "State reasons for minimum/maximum oil temperature limitations.",
+                            required: ["viscosity", "lubrication", "wear", "protection"]
+                        },
+                        {
+                            id: "3.3.3c",
+                            text: "State reasons for minimum/maximum CHT limitations.",
+                            required: ["thermal", "stress", "damage", "expansion"]
+                        }
+                    ]
+                },
+                {
+                    title: "3.4 Engine Malfunctions",
+                    questions: [
+                        {
+                            id: "3.4.1a",
+                            text: "Describe the cockpit indications which may suggest a malfunction of the alternator.",
+                            required: ["ammeter", "voltage", "electrical", "discharge"]
+                        },
+                        {
+                            id: "3.4.1b",
+                            text: "State the actions a pilot should take to rectify a malfunction of the alternator.",
+                            required: ["load", "shed", "battery", "conservation"]
+                        },
+                        {
+                            id: "3.4.2a",
+                            text: "With reference to oil temperature and pressure gauges, identify reasons for abnormality and state pilot actions.",
+                            required: ["pressure", "temperature", "shutdown", "monitor"]
+                        },
+                        {
+                            id: "3.4.2b",
+                            text: "With reference to CHT gauge, identify reasons for abnormality and state pilot actions.",
+                            required: ["temperature", "mixture", "power", "cooling"]
+                        }
+                    ]
+                },
+                {
+                    title: "3.4 Carburetor and Engine Icing",
+                    questions: [
+                        {
+                            id: "3.4.3",
+                            text: "Describe the method for checking the operation of carburettor heat prior to take-off.",
+                            required: ["rpm", "drop", "heat", "check"]
+                        },
+                        {
+                            id: "3.4.4a",
+                            text: "State the conditions conducive to throttle ice formation.",
+                            required: ["humidity", "temperature", "throttle", "partial"]
+                        },
+                        {
+                            id: "3.4.4b",
+                            text: "State the conditions conducive to fuel evaporation ice formation.",
+                            required: ["temperature", "pressure", "drop", "venturi"]
+                        },
+                        {
+                            id: "3.4.4c",
+                            text: "State the conditions conducive to impact ice formation.",
+                            required: ["visible", "moisture", "freezing", "temperature"]
+                        }
+                    ]
+                },
+                {
+                    title: "3.5 Flight Instruments",
+                    questions: [
+                        {
+                            id: "3.5.1",
+                            text: "Explain the colour code markings on an airspeed indicator (ASI).",
+                            required: ["white", "green", "yellow", "red"]
+                        },
+                        {
+                            id: "3.5.2",
+                            text: "Describe the basic operation of the primary flight instruments and associated systems.",
+                            required: ["pitot", "static", "gyroscopic", "pressure"]
+                        },
+                        {
+                            id: "3.5.3a",
+                            text: "State the effect of a blockage of the pitot or static source on pressure instruments.",
+                            required: ["airspeed", "altimeter", "VSI", "errors"]
+                        },
+                        {
+                            id: "3.5.3b",
+                            text: "State the effect of using an alternate static source located inside the cockpit.",
+                            required: ["pressure", "difference", "error", "indication"]
+                        }
+                    ]
+                },
+                {
+                    title: "4.1 Basic Aerodynamics",
+                    questions: [
+                        {
+                            id: "4.1.1",
+                            text: "Explain basic physics and aircraft energy state in terms of kinetic energy, potential energy, and inertia.",
+                            required: ["motion", "height", "resistance", "change"]
+                        },
+                        {
+                            id: "4.1.2a",
+                            text: "Explain the meaning of aerofoil, angle of attack, and relative airflow.",
+                            required: ["wing", "air", "direction", "shape"]
+                        },
+                        {
+                            id: "4.1.2b",
+                            text: "Explain the meaning of centre of pressure and centre of gravity.",
+                            required: ["lift", "weight", "balance", "point"]
+                        },
+                        {
+                            id: "4.1.2c",
+                            text: "Explain the meaning of lift, weight, thrust, and drag.",
+                            required: ["forces", "vertical", "horizontal", "opposing"]
+                        }
+                    ]
+                },
+                {
+                    title: "4.2 Lift and Drag",
+                    questions: [
+                        {
+                            id: "4.2.1a",
+                            text: "State how lift and drag change with airspeed.",
+                            required: ["square", "speed", "increase", "relationship"]
+                        },
+                        {
+                            id: "4.2.1b",
+                            text: "State how lift and drag change with angle of attack.",
+                            required: ["increase", "critical", "stall", "separation"]
+                        },
+                        {
+                            id: "4.2.2a",
+                            text: "Explain parasite (zero lift) drag - form, interference, skin friction.",
+                            required: ["shape", "surface", "interaction", "resistance"]
+                        },
+                        {
+                            id: "4.2.2b",
+                            text: "Explain induced (lift dependent) drag.",
+                            required: ["vortices", "wingtip", "pressure", "lift"]
+                        }
+                    ]
+                },
+                {
+                    title: "4.3 Climbing and Descending",
+                    questions: [
+                        {
+                            id: "4.3.1",
+                            text: "Describe the difference between rate of climb and angle of climb.",
+                            required: ["vertical", "speed", "ground", "distance"]
+                        },
+                        {
+                            id: "4.4.1a",
+                            text: "List how aircraft weight affects wake turbulence strength.",
+                            required: ["heavier", "stronger", "vortices", "intensity"]
+                        },
+                        {
+                            id: "4.4.1b",
+                            text: "List how aircraft speed affects wake turbulence strength.",
+                            required: ["slower", "stronger", "vortices", "generation"]
+                        },
+                        {
+                            id: "4.4.1c",
+                            text: "List how wing shape affects wake turbulence strength.",
+                            required: ["flaps", "configuration", "lift", "distribution"]
+                        }
+                    ]
+                },
+                {
+                    title: "4.4 Wake Turbulence",
+                    questions: [
+                        {
+                            id: "4.4.2",
+                            text: "State the primary control hazard that may result from a vortex encounter.",
+                            required: ["roll", "control", "upset", "induced"]
+                        },
+                        {
+                            id: "4.4.3a",
+                            text: "Describe the approximate flow direction around each vortex.",
+                            required: ["circular", "inward", "downward", "rotation"]
+                        },
+                        {
+                            id: "4.4.3b",
+                            text: "Describe the approximate location of vortices in cruise flight.",
+                            required: ["behind", "below", "wingspan", "drift"]
+                        },
+                        {
+                            id: "4.4.3c",
+                            text: "Describe the approximate location of vortices during take-off and landing.",
+                            required: ["behind", "sink", "remain", "path"]
+                        }
+                    ]
+                },
+                {
+                    title: "5.1 Navigation and Charts",
+                    questions: [
+                        {
+                            id: "5.1.1",
+                            text: "Identify the major features displayed on visual charts.",
+                            required: ["terrain", "airspace", "obstacles", "frequencies"]
+                        },
+                        {
+                            id: "5.1.2",
+                            text: "State the charts used to identify controlled airspace (CTA) and prohibited, restricted and danger (PRD) areas.",
+                            required: ["visual", "terminal", "enroute", "charts"]
+                        },
+                        {
+                            id: "5.2.1",
+                            text: "Determine runway data from ERSA for a given airport.",
+                            required: ["length", "width", "surface", "direction"]
+                        },
+                        {
+                            id: "5.2.2",
+                            text: "Determine data pertaining to Prohibited, Restricted and Danger areas.",
+                            required: ["boundaries", "times", "vertical", "limits"]
+                        }
+                    ]
+                },
+                {
+                    title: "6.1 Airworthiness and Equipment",
+                    questions: [
+                        {
+                            id: "6.1.1",
+                            text: "State the documents required to determine the serviceability of an aircraft.",
+                            required: ["maintenance", "release", "logbook", "certificates"]
+                        },
+                        {
+                            id: "6.1.2",
+                            text: "Describe how to certify the aircraft for flight.",
+                            required: ["inspection", "maintenance", "release", "checks"]
+                        },
+                        {
+                            id: "6.1.3",
+                            text: "Describe the process to record an aircraft defect on a maintenance release.",
+                            required: ["details", "signature", "date", "description"]
+                        }
+                    ]
+                },
+                {
+                    title: "6.2 Take-off and Landing Performance",
+                    questions: [
+                        {
+                            id: "6.2.1",
+                            text: "Differentiate between pressure height and density height.",
+                            required: ["pressure", "density", "altitude", "temperature"]
+                        },
+                        {
+                            id: "6.2.2a",
+                            text: "Describe how to use an altimeter to obtain local QNH at an aerodrome.",
+                            required: ["setting", "elevation", "pressure", "reading"]
+                        },
+                        {
+                            id: "6.2.2b",
+                            text: "Describe how to use an altimeter to obtain pressure height of an aerodrome.",
+                            required: ["1013", "standard", "difference", "elevation"]
+                        },
+                        {
+                            id: "6.2.2c",
+                            text: "Describe how to use an altimeter to obtain elevation of an aerodrome.",
+                            required: ["QNH", "reading", "ground", "level"]
+                        }
+                    ]
+                },
+                {
+                    title: "6.3 Speed Limitations",
+                    questions: [
+                        {
+                            id: "6.3.1a",
+                            text: "Explain normal operating speed (VNO).",
+                            required: ["maximum", "smooth", "air", "cruise"]
+                        },
+                        {
+                            id: "6.3.1b",
+                            text: "Explain never exceed speed (VNE).",
+                            required: ["maximum", "structural", "damage", "limit"]
+                        },
+                        {
+                            id: "6.3.1c",
+                            text: "Explain maximum manoeuvre speed (VA).",
+                            required: ["full", "control", "deflection", "stress"]
+                        },
+                        {
+                            id: "6.3.1d",
+                            text: "Explain turbulence penetration speed (VB).",
+                            required: ["gust", "loads", "protection", "rough"]
+                        }
+                    ]
+                },
+                {
+                    title: "6.4 Weight and Balance",
+                    questions: [
+                        {
+                            id: "6.4.1a",
+                            text: "Explain the meaning of datum in weight and balance calculations.",
+                            required: ["reference", "point", "measure", "arms"]
+                        },
+                        {
+                            id: "6.4.1b",
+                            text: "Explain the meaning of arm in weight and balance calculations.",
+                            required: ["distance", "datum", "location", "moment"]
+                        },
+                        {
+                            id: "6.4.1c",
+                            text: "Explain the meaning of moment in weight and balance calculations.",
+                            required: ["weight", "arm", "multiply", "force"]
+                        },
+                        {
+                            id: "6.4.1d",
+                            text: "Explain the meaning of station in weight and balance calculations.",
+                            required: ["location", "distance", "datum", "position"]
+                        }
+                    ]
+                },
+                {
+                    title: "Unit 1.5.1 Flight Rules and Air Law",
+                    questions: [
+                        {
+                            id: "2.1.1",
+                            text: "Explain the reason for recording flight time in a logbook and what other information must be recorded.",
+                            required: ["experience", "currency", "qualifications", "details"]
+                        },
+                        {
+                            id: "2.1.2",
+                            text: "State the different documents that contain aviation legislation, aeronautical information and general operating rules.",
+                            required: ["CASR", "AIP", "ERSA", "CAR"]
+                        },
+                        {
+                            id: "2.1.3",
+                            text: "Explain the purpose of the aircraft maintenance release and how it is used.",
+                            required: ["serviceability", "defects", "certification", "maintenance"]
+                        }
+                    ]
+                },
+                {
+                    title: "RPL Privileges and Limitations",
+                    questions: [
+                        {
+                            id: "2.2.1",
+                            text: "State the limitations of the RPL.",
+                            required: ["private", "operations", "restrictions", "conditions"]
+                        },
+                        {
+                            id: "2.2.2",
+                            text: "Describe the requirements for maintaining the privileges of the RPL.",
+                            required: ["currency", "medical", "recent", "experience"]
+                        },
+                        {
+                            id: "2.2.3",
+                            text: "State the medical standards and limitations for the holder of an RPL.",
+                            required: ["class", "medical", "validity", "restrictions"]
+                        }
+                    ]
+                },
+                {
+                    title: "Conditions of Flight",
+                    questions: [
+                        {
+                            id: "2.3.1a",
+                            text: "Recall and apply the rules of the air.",
+                            required: ["right", "way", "separation", "rules"]
+                        },
+                        {
+                            id: "2.3.1b",
+                            text: "State the requirements relating to operation of aircraft on and in the vicinity of an aerodrome.",
+                            required: ["circuit", "procedures", "separation", "direction"]
+                        },
+                        {
+                            id: "2.3.1c",
+                            text: "State the separation minima between aircraft for take-off and landing at a non-controlled aerodrome.",
+                            required: ["distance", "time", "wake", "turbulence"]
+                        }
+                    ]
+                },
+                {
+                    title: "Unit 1.8.1 Meteorology",
+                    questions: [
+                        {
+                            id: "2.1.1a",
+                            text: "Demonstrate knowledge of local weather, particularly regarding thunderstorms.",
+                            required: ["development", "hazards", "avoidance", "indicators"]
+                        },
+                        {
+                            id: "2.1.1b",
+                            text: "Demonstrate knowledge of local weather, particularly regarding low cloud.",
+                            required: ["formation", "visibility", "ceiling", "restrictions"]
+                        },
+                        {
+                            id: "2.1.1c",
+                            text: "Demonstrate knowledge of local weather, particularly regarding poor visibility.",
+                            required: ["causes", "fog", "rain", "restrictions"]
+                        },
+                        {
+                            id: "2.1.1d",
+                            text: "Demonstrate knowledge of local weather, particularly regarding turbulence.",
+                            required: ["mechanical", "thermal", "wind", "terrain"]
+                        }
+                    ]
+                },
+                {
+                    title: "Weather Reports and Forecasts",
+                    questions: [
+                        {
+                            id: "2.2.1",
+                            text: "Demonstrate an understanding of weather forecasts, reports and broadcasts for the area of operation.",
+                            required: ["TAF", "METAR", "SPECI", "interpretation"]
+                        },
+                        {
+                            id: "2.3.1a",
+                            text: "Recognize signs which may indicate the presence of turbulence and thermals.",
+                            required: ["cumulus", "wind", "terrain", "temperature"]
+                        },
+                        {
+                            id: "2.3.1b",
+                            text: "Recognize signs which may indicate the presence of wind gradient and wind shear.",
+                            required: ["terrain", "clouds", "changes", "indicators"]
+                        }
+                    ]
+                },
+                {
+                    title: "Unit 1.6.1 Human Factors - Basic Health",
+                    questions: [
+                        {
+                            id: "2.1.1a",
+                            text: "Relate the effect on pilot performance of diet and exercise.",
+                            required: ["fitness", "alertness", "fatigue", "performance"]
+                        },
+                        {
+                            id: "2.1.1b",
+                            text: "Relate the effect on pilot performance of coronary risk factors.",
+                            required: ["smoking", "cholesterol", "obesity", "hereditary"]
+                        },
+                        {
+                            id: "2.1.1c",
+                            text: "Relate the effect on pilot performance of upper respiratory tract infections.",
+                            required: ["congestion", "pressure", "disorientation", "performance"]
+                        }
+                    ]
+                },
+                {
+                    title: "Human Factors - Health and Performance",
+                    questions: [
+                        {
+                            id: "2.2.1",
+                            text: "State the reasons for and frequency of physical examinations and how to locate DAMEs.",
+                            required: ["medical", "standards", "safety", "requirements"]
+                        },
+                        {
+                            id: "2.2.2a",
+                            text: "Recall how alcohol is absorbed and excreted.",
+                            required: ["absorption", "metabolism", "time", "effects"]
+                        },
+                        {
+                            id: "2.2.2b",
+                            text: "Outline what a 'hangover' is and explain its effect on flying performance.",
+                            required: ["dehydration", "concentration", "reaction", "judgment"]
+                        }
+                    ]
+                },
+                {
+                    title: "Threat and Error Management",
+                    questions: [
+                        {
+                            id: "2.15.1",
+                            text: "Describe the basic principles of TEM.",
+                            required: ["threat", "error", "management", "mitigation"]
+                        },
+                        {
+                            id: "2.15.2",
+                            text: "Explain the principles of TEM and detail a process to identify and manage threats and errors during single-pilot operations.",
+                            required: ["identify", "assess", "mitigate", "review"]
+                        },
+                        {
+                            id: "2.15.3",
+                            text: "Define 'threat' and give examples of threats.",
+                            required: ["external", "hazards", "conditions", "situations"]
+                        },
+                        {
+                            id: "2.15.4",
+                            text: "Give an example of a committed error and how action could be taken to ensure safe flight.",
+                            required: ["recognition", "correction", "prevention", "learning"]
+                        }
+                    ]
+                }
             ];
+                
+            let currentSection = 0;
+            let timer;
+            let seconds = 0;
+            let isNavOpen = false;
+            const userAnswers = JSON.parse(localStorage.getItem('quizAnswers')) || {};
+            let score = { correct: 0, total: 0 };
 
-            validations[currentStep * 3]?.();
-            validations[currentStep * 3 + 1]?.();
-            validations[currentStep * 3 + 2]?.();
+           // Category Navigation
+const categories = [
+    { id: 'basic', name: 'Basic Knowledge', sections: [0, 1, 2, 3, 4] },
+    { id: 'engine', name: 'Power Plants & Systems', sections: [5, 6, 7, 8, 9] },
+    { id: 'aero', name: 'Aerodynamics', sections: [10, 11, 12, 13] },
+    { id: 'nav', name: 'Navigation', sections: [14, 15] },
+    { id: 'ops', name: 'Operations', sections: [16, 17, 18] },
+    { id: 'law', name: 'Air Law', sections: [19, 20, 21] },
+    { id: 'met', name: 'Meteorology', sections: [22, 23] },
+    { id: 'human', name: 'Human Factors', sections: [24, 25, 26] }
+];
 
-            return valid;
+// Modified category initialization to include new styling
+function initializeCategories() {
+            const categoryList = document.getElementById('categoryList');
+            categories.forEach(category => {
+                const button = document.createElement('button');
+                button.className = 'w-full text-left px-4 py-2 text-white rounded transition-colors duration-200 hover-gradient';
+                button.textContent = category.name;
+                button.onclick = () => jumpToSection(category.sections[0]);
+                categoryList.appendChild(button);
+            });
         }
 
-        function validateField(id, required, errorId, matchAll = false) {
-            const input = document.getElementById(id);
-            const error = document.getElementById(errorId);
-            const value = input.value.toLowerCase();
-            if (matchAll ? !required.split(' ').every(term => value.includes(term)) : !value.includes(required)) {
-                error.classList.remove('hidden');
-                return false;
-            } else {
-                error.classList.add('hidden');
-                return true;
+function toggleNav() {
+    const nav = document.getElementById('categoryNav');
+    const mainContent = document.querySelector('.ml-0');
+    isNavOpen = !isNavOpen;
+    nav.style.transform = isNavOpen ? 'translateX(0)' : 'translateX(-100%)';
+    mainContent.style.marginLeft = isNavOpen ? '16rem' : '0';
+}
+      // Answer validation and saving
+function validateAnswer(questionId, required) {
+    const answer = userAnswers[questionId] || '';
+    const lowerAnswer = answer.toLowerCase();
+    return required.every(keyword => 
+        lowerAnswer.includes(keyword.toLowerCase())
+    );
+}
+
+function saveAnswer(questionId, value) {
+    userAnswers[questionId] = value;
+    localStorage.setItem('quizAnswers', JSON.stringify(userAnswers));
+}
+
+// Navigation functions
+function updateNavigation() {
+    const prevButton = document.getElementById('prevButton');
+    const nextButton = document.getElementById('nextButton');
+    
+    prevButton.disabled = currentSection === 0;
+    nextButton.disabled = currentSection === sections.length - 1;
+    
+    prevButton.style.opacity = currentSection === 0 ? '0.5' : '1';
+    nextButton.style.opacity = currentSection === sections.length - 1 ? '0.5' : '1';
+}
+
+function prevSection() {
+    if (currentSection > 0) {
+        currentSection--;
+        renderSection();
+        document.getElementById('app').scrollIntoView({ behavior: 'smooth' });
+    }
+}
+
+function nextSection() {
+    if (currentSection < sections.length - 1) {
+        currentSection++;
+        renderSection();
+        document.getElementById('app').scrollIntoView({ behavior: 'smooth' });
+    }
+}
+
+function jumpToSection(sectionIndex) {
+    if (sectionIndex >= 0 && sectionIndex < sections.length) {
+        currentSection = sectionIndex;
+        renderSection();
+        if (isNavOpen) {
+            toggleNav(); // Close navigation after jumping
+        }
+        document.getElementById('app').scrollIntoView({ behavior: 'smooth' });
+    }
+}
+            // Timer Functions
+            function startTimer() {
+                timer = setInterval(() => {
+                    seconds++;
+                    updateTimerDisplay();
+                }, 1000);
             }
-        }
 
-        function nextPrev(n) {
-            if (n === 1 && !validateStep()) return;
-            currentStep += n;
-            if (currentStep >= steps.length) {
-                document.getElementById('wizardForm').submit();
-                return;
+            function updateTimerDisplay() {
+                const hours = Math.floor(seconds / 3600);
+                const minutes = Math.floor((seconds % 3600) / 60);
+                const secs = seconds % 60;
+                document.getElementById('timer').textContent = 
+                    `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
             }
-            showStep(currentStep);
-        }
 
-        showStep(currentStep);
-    </script>
-</body>
-</html>
+            // Progress Bar
+            function updateProgress() {
+                const progress = (currentSection + 1) / sections.length * 100;
+                document.getElementById('progressBar').style.width = `${progress}%`;
+            }
+
+            // Section Summary
+            function showSectionSummary() {
+                const section = sections[currentSection];
+                const summary = document.getElementById('sectionSummary');
+                const content = document.getElementById('summaryContent');
+                content.innerHTML = `
+                    <p><strong>Topics covered:</strong></p>
+                    <ul class="list-disc ml-4 mt-2">
+                        ${section.questions.map(q => `<li>${q.text}</li>`).join('')}
+                    </ul>
+                    <p class="mt-2"><strong>Required concepts:</strong> ${
+                        [...new Set(section.questions.flatMap(q => q.required))].join(', ')
+                    }</p>
+                `;
+                summary.classList.remove('hidden');
+            }
+
+            // Enhanced Question Rendering
+            function renderSection() {
+                const section = sections[currentSection];
+                const container = document.getElementById('sectionContainer');
+                
+                let html = `
+                    <h2 class="text-xl font-semibold mb-4">${section.title}</h2>
+                    <div class="space-y-6">
+                `;
+                
+                section.questions.forEach(question => {
+                    const savedAnswer = userAnswers[question.id] || '';
+                    html += `
+                        <div class="border-b pb-4">
+                            <label class="block mb-2 font-medium">
+                                ${question.text}
+                            </label>
+                            <textarea
+                                id="${question.id}"
+                                class="w-full p-2 border rounded-md"
+                                rows="3"
+                                onchange="saveAnswer('${question.id}', this.value)"
+                            >${savedAnswer}</textarea>
+                            <p id="feedback-${question.id}" class="text-red-500 text-sm mt-1 hidden">
+                                Your answer should include these key concepts: ${question.required.join(', ')}
+                            </p>
+                        </div>
+                    `;
+                });
+                
+                html += '</div>';
+                container.innerHTML = html;
+                
+                updateNavigation();
+                updateProgress();
+                showSectionSummary();
+            }
+
+            function checkAnswers() {
+    const section = sections[currentSection];
+    let sectionScore = { correct: 0, total: section.questions.length };
+    let feedback = [];
+    
+    section.questions.forEach(question => {
+        const textarea = document.getElementById(question.id);
+        const feedbackElement = document.getElementById(`feedback-${question.id}`);
+        const answer = userAnswers[question.id] || '';
+        const missingKeywords = question.required.filter(keyword => 
+            !answer.toLowerCase().includes(keyword.toLowerCase())
+        );
+        
+        const isValid = missingKeywords.length === 0;
+        
+        // Update UI
+        textarea.style.borderColor = isValid ? '#10B981' : '#EF4444';
+        feedbackElement.classList.toggle('hidden', isValid);
+        
+        if (isValid) {
+            sectionScore.correct++;
+        } else {
+            feedback.push(`Question ${question.id}: Missing concepts: ${missingKeywords.join(', ')}`);
+        }
+    });
+    
+    // Update total score
+    score.correct = score.correct + sectionScore.correct;
+    score.total = score.total + sectionScore.total;
+    updateScoreDisplay();
+    
+    // Show detailed feedback
+    const feedbackMessage = `
+Section Score: ${sectionScore.correct}/${sectionScore.total}
+${feedback.length > 0 ? '\nMissing concepts in your answers:\n' + feedback.join('\n') : '\nGreat job! All required concepts covered.'}
+    `;
+    
+    alert(feedbackMessage);
+}
+            function updateScoreDisplay() {
+                document.getElementById('scoreDisplay').textContent = 
+                    `Score: ${score.correct}/${score.total}`;
+            }
+
+            // Initialize
+            initializeCategories();
+            startTimer();
+            renderSection();
+            // Add event listeners for keyboard navigation
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowLeft') {
+        prevSection();
+    } else if (e.key === 'ArrowRight') {
+        nextSection();
+    }
+});
+        </script>
+    </body>
+    </html>
