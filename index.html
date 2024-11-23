@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aeronautical Knowledge Wizard</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 text-gray-800">
+    <div class="max-w-4xl mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
+        <h1 class="text-3xl font-bold text-center mb-6">Aeronautical Knowledge Wizard</h1>
+        <form id="wizardForm">
+            <!-- Step 1 -->
+            <div class="step active">
+                <h2 class="text-2xl font-semibold mb-4">Basic Aeronautical Knowledge</h2>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-2">Describe direction using the following methods:</label>
+                    <textarea id="directionMethods" name="directionMethods" class="w-full p-2 border rounded" rows="4"></textarea>
+                    <p id="directionMethodsError" class="text-sm text-red-600 hidden">Please include at least "clock code".</p>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-2">Define the meaning of aircraft heading (HDG):</label>
+                    <textarea id="aircraftHeading" name="aircraftHeading" class="w-full p-2 border rounded" rows="2"></textarea>
+                    <p id="aircraftHeadingError" class="text-sm text-red-600 hidden">Answer must include "direction".</p>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-2">Differentiate between true (T), magnetic (M), and compass (C) headings:</label>
+                    <textarea id="headingTypes" name="headingTypes" class="w-full p-2 border rounded" rows="4"></textarea>
+                    <p id="headingTypesError" class="text-sm text-red-600 hidden">Ensure to include all three types: "true", "magnetic", and "compass".</p>
+                </div>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="step hidden">
+                <h2 class="text-2xl font-semibold mb-4">Power Plants and Systems</h2>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-2">Describe the operation of a 4-stroke cycle internal combustion engine:</label>
+                    <textarea id="engineOperation" name="engineOperation" class="w-full p-2 border rounded" rows="4"></textarea>
+                    <p id="engineOperationError" class="text-sm text-red-600 hidden">Include "intake", "compression", "power", and "exhaust".</p>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-2">State the effect of increasing altitude and temperature on engine performance:</label>
+                    <textarea id="altitudeEffect" name="altitudeEffect" class="w-full p-2 border rounded" rows="2"></textarea>
+                    <p id="altitudeEffectError" class="text-sm text-red-600 hidden">Answer must mention "decrease in power".</p>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-2">Describe the purpose of the carburetor and throttle:</label>
+                    <textarea id="carbThrottle" name="carbThrottle" class="w-full p-2 border rounded" rows="4"></textarea>
+                    <p id="carbThrottleError" class="text-sm text-red-600 hidden">Include explanations for both "carburetor" and "throttle".</p>
+                </div>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="step hidden">
+                <h2 class="text-2xl font-semibold mb-4">Aerodynamics</h2>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-2">Explain the relationship between lift, drag, and airspeed:</label>
+                    <textarea id="liftDragAirspeed" name="liftDragAirspeed" class="w-full p-2 border rounded" rows="4"></textarea>
+                    <p id="liftDragAirspeedError" class="text-sm text-red-600 hidden">Answer must discuss all three: "lift", "drag", and "airspeed".</p>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-2">State how angle of attack affects lift and drag:</label>
+                    <textarea id="angleOfAttack" name="angleOfAttack" class="w-full p-2 border rounded" rows="3"></textarea>
+                    <p id="angleOfAttackError" class="text-sm text-red-600 hidden">Mention the increase in "lift" and "drag" with angle of attack.</p>
+                </div>
+            </div>
+
+            <!-- Step 4 -->
+            <div class="step hidden">
+                <h2 class="text-2xl font-semibold mb-4">Navigation</h2>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-2">Identify major features displayed on visual charts:</label>
+                    <textarea id="visualCharts" name="visualCharts" class="w-full p-2 border rounded" rows="3"></textarea>
+                    <p id="visualChartsError" class="text-sm text-red-600 hidden">Answer should include "controlled airspace" and "terrain".</p>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-2">State the charts used for identifying controlled airspace:</label>
+                    <textarea id="controlledAirspace" name="controlledAirspace" class="w-full p-2 border rounded" rows="2"></textarea>
+                    <p id="controlledAirspaceError" class="text-sm text-red-600 hidden">Mention at least one example, such as "VTC".</p>
+                </div>
+            </div>
+
+            <!-- Step 5 -->
+            <div class="step hidden">
+                <h2 class="text-2xl font-semibold mb-4">Human Factors</h2>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-2">Describe the effects of dehydration on pilot performance:</label>
+                    <textarea id="dehydrationEffects" name="dehydrationEffects" class="w-full p-2 border rounded" rows="4"></textarea>
+                    <p id="dehydrationEffectsError" class="text-sm text-red-600 hidden">Answer should include "fatigue" and "reduced concentration".</p>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-2">List two ways to combat stress during flight:</label>
+                    <textarea id="combatStress" name="combatStress" class="w-full p-2 border rounded" rows="2"></textarea>
+                    <p id="combatStressError" class="text-sm text-red-600 hidden">Provide at least two methods, e.g., "deep breathing" or "adequate rest".</p>
+                </div>
+            </div>
+
+            <!-- Buttons -->
+            <div class="flex justify-between mt-6">
+                <button type="button" id="prevBtn" class="hidden bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded" onclick="nextPrev(-1)">Previous</button>
+                <button type="button" id="nextBtn" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded" onclick="nextPrev(1)">Next</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        let currentStep = 0;
+        const steps = document.querySelectorAll('.step');
+
+        function showStep(n) {
+            steps.forEach((step, index) => step.classList.toggle('hidden', index !== n));
+            document.getElementById('prevBtn').classList.toggle('hidden', n === 0);
+            document.getElementById('nextBtn').textContent = n === steps.length - 1 ? 'Submit' : 'Next';
+        }
+
+        function validateStep() {
+            let valid = true;
+
+            const validations = [
+                // Step 1 validations
+                () => validateField('directionMethods', 'clock code', 'directionMethodsError'),
+                () => validateField('aircraftHeading', 'direction', 'aircraftHeadingError'),
+                () => validateField('headingTypes', 'true magnetic compass', 'headingTypesError', true),
+
+                // Step 2 validations
+                () => validateField('engineOperation', 'intake compression power exhaust', 'engineOperationError', true),
+                () => validateField('altitudeEffect', 'decrease in power', 'altitudeEffectError'),
+                () => validateField('carbThrottle', 'carburetor throttle', 'carbThrottleError', true),
+
+                // Step 3 validations
+                () => validateField('liftDragAirspeed', 'lift drag airspeed', 'liftDragAirspeedError', true),
+                () => validateField('angleOfAttack', 'lift drag', 'angleOfAttackError', true),
+
+                // Step 4 validations
+                () => validateField('visualCharts', 'controlled airspace terrain', 'visualChartsError', true),
+                () => validateField('controlledAirspace', 'vtc', 'controlledAirspaceError'),
+
+                // Step 5 validations
+                () => validateField('dehydrationEffects', 'fatigue reduced concentration', 'dehydrationEffectsError', true),
+                () => validateField('combatStress', 'deep breathing adequate rest', 'combatStressError', true),
+            ];
+
+            validations[currentStep * 3]?.();
+            validations[currentStep * 3 + 1]?.();
+            validations[currentStep * 3 + 2]?.();
+
+            return valid;
+        }
+
+        function validateField(id, required, errorId, matchAll = false) {
+            const input = document.getElementById(id);
+            const error = document.getElementById(errorId);
+            const value = input.value.toLowerCase();
+            if (matchAll ? !required.split(' ').every(term => value.includes(term)) : !value.includes(required)) {
+                error.classList.remove('hidden');
+                return false;
+            } else {
+                error.classList.add('hidden');
+                return true;
+            }
+        }
+
+        function nextPrev(n) {
+            if (n === 1 && !validateStep()) return;
+            currentStep += n;
+            if (currentStep >= steps.length) {
+                document.getElementById('wizardForm').submit();
+                return;
+            }
+            showStep(currentStep);
+        }
+
+        showStep(currentStep);
+    </script>
+</body>
+</html>
