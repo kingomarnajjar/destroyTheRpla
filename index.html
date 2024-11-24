@@ -64,6 +64,49 @@
                 height: 2px;
                 background: linear-gradient(to right, #4a90e2, transparent);
             }
+
+             /* Audio control styling */
+        .audio-control {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: rgba(26, 42, 58, 0.9);
+            padding: 10px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        .audio-control:hover {
+            transform: scale(1.1);
+        }
+
+        .audio-icon {
+            width: 24px;
+            height: 24px;
+            fill: white;
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            background: rgba(26, 42, 58, 0.9);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         </style>
 </head>
 <body class="bg-gray-100">
@@ -86,7 +129,7 @@
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"/>
                         </svg>
                     </button>
-                    <h1 class="text-2xl font-bold text-gray-800">RPLA: Cheaper Than Crashing a Plane</h1>
+                    <h1 class="text-2xl font-bold text-gray-800">RPLA MOS: Cheaper Than Crashing a Plane</h1>
                 </div>
                 <div class="flex items-center space-x-4">
                     <div id="timer" class="text-xl font-bold text-blue-600">00:00:00</div>
@@ -148,6 +191,27 @@
                 </div>
             </div>
         </div>
+
+        <!-- Audio Element -->
+    <audio id="bgMusic" loop>
+        <source src="memes/whowantstobeamillionairsuspense.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <!-- Audio Control Button -->
+    <div class="audio-control" onclick="toggleMusic()" id="audioControl">
+        <!-- Sound On Icon -->
+        <svg class="audio-icon" id="soundOnIcon" viewBox="0 0 24 24">
+            <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+        </svg>
+        <!-- Sound Off Icon -->
+        <svg class="audio-icon" id="soundOffIcon" viewBox="0 0 24 24" style="display: none;">
+            <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/>
+        </svg>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="musicToast"></div>
     </div>
 
 
@@ -1225,6 +1289,66 @@ document.addEventListener('keydown', (e) => {
         nextSection();
     }
 });
+
+ // Add this new section for audio control
+ let bgMusic = document.getElementById('bgMusic');
+        let soundOnIcon = document.getElementById('soundOnIcon');
+        let soundOffIcon = document.getElementById('soundOffIcon');
+        let isMusicPlaying = false;
+
+        function toggleMusic() {
+            if (isMusicPlaying) {
+                bgMusic.pause();
+                soundOnIcon.style.display = 'none';
+                soundOffIcon.style.display = 'block';
+                showToast('Music paused');
+            } else {
+                bgMusic.play().catch(error => {
+                    showToast('Click anywhere to enable music');
+                    document.body.addEventListener('click', function initMusic() {
+                        bgMusic.play();
+                        document.body.removeEventListener('click', initMusic);
+                    }, { once: true });
+                });
+                soundOnIcon.style.display = 'block';
+                soundOffIcon.style.display = 'none';
+                showToast('Music playing');
+            }
+            isMusicPlaying = !isMusicPlaying;
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('musicToast');
+            toast.textContent = message;
+            toast.style.display = 'block';
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 2000);
+        }
+
+        // Start music when page loads (with user interaction handling)
+        document.addEventListener('DOMContentLoaded', function() {
+            showToast('Click anywhere to start the experience');
+            document.body.addEventListener('click', function initMusic() {
+                bgMusic.play().then(() => {
+                    isMusicPlaying = true;
+                    soundOnIcon.style.display = 'block';
+                    soundOffIcon.style.display = 'none';
+                }).catch(error => {
+                    console.log('Playback prevented due to browser restrictions');
+                });
+                document.body.removeEventListener('click', initMusic);
+            }, { once: true });
+        });
+
+        // Handle page visibility changes
+        document.addEventListener('visibilitychange', function() {
+            if (document.hidden && isMusicPlaying) {
+                bgMusic.pause();
+            } else if (!document.hidden && isMusicPlaying) {
+                bgMusic.play();
+            }
+        });
         </script>
     </body>
     </html>
