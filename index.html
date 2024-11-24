@@ -5,47 +5,99 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>RPLA MOS Knowledge Assessment</title>
         <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <style>
-        .gradient-bg {
-            background: linear-gradient(to bottom, #ff69b4, #8a2be2);
-        }
-        .hover-gradient:hover {
-            background: linear-gradient(to right, #ff1493, #9400d3);
-        }
-    </style>
+        <style>
+            /* Aviation-inspired theme */
+            .aviation-nav {
+                background: #000000; /* Dark navy blue */
+                border-right: 2px solid #4a90e2; /* Accent blue */
+            }
+            
+            .nav-button:hover {
+                background: #01b7ff; /* Lighter navy for hover */
+            }
+    
+            /* Floating head animation */
+            .floating-head {
+                position: absolute;
+                top: -60px; /* Position above button */
+                left: 50%;
+                transform: translateX(-50%);
+                width: 80px;
+                height: 80px;
+                border-radius: 50%;
+                animation: float 2s ease-in-out infinite;
+                display: none;
+            }
+    
+            .check-answers-container {
+                position: relative;
+            }
+    
+            .check-answers-container:hover .floating-head {
+                display: block;
+            }
+    
+            @keyframes float {
+                0% {
+                    transform: translateX(-50%) translateY(0px);
+                }
+                50% {
+                    transform: translateX(-50%) translateY(-10px);
+                }
+                100% {
+                    transform: translateX(-50%) translateY(0px);
+                }
+            }
+    
+            /* Aviation accent elements */
+            .accent-line {
+                border-color: #4a90e2;
+                position: relative;
+            }
+            
+            .accent-line::after {
+                content: '';
+                position: absolute;
+                bottom: -2px;
+                left: 0;
+                width: 100%;
+                height: 2px;
+                background: linear-gradient(to right, #4a90e2, transparent);
+            }
+        </style>
 </head>
 <body class="bg-gray-100">
-    <!-- Navigation Menu with updated styling -->
-    <nav id="categoryNav" class="fixed top-0 left-0 h-full w-64 gradient-bg text-white p-4 transform -translate-x-full transition-transform duration-200 ease-in-out shadow-xl">
-        <h2 class="text-xl font-bold mb-4 text-white">Categories</h2>
+    <!-- Navigation Menu with aviation theme -->
+    <nav id="categoryNav" class="fixed top-0 left-0 h-full w-64 aviation-nav text-white p-4 transform -translate-x-full transition-transform duration-200 ease-in-out shadow-xl">
+        <h2 class="text-xl font-bold mb-4 text-blue-400 accent-line pb-2">Categories</h2>
         <div id="categoryList" class="space-y-2">
             <!-- Categories will be populated here -->
         </div>
-    </nav>
+    </nav>  
 
-    <!-- Main Content -->
-    <div class="ml-0 transition-margin duration-200 ease-in-out">
+     <!-- Main Content -->
+     <div class="ml-0 transition-margin duration-200 ease-in-out">
         <!-- Header Bar -->
         <div class="bg-white shadow-md p-4 fixed top-0 w-full z-10">
             <div class="max-w-7xl mx-auto flex justify-between items-center">
                 <div class="flex items-center">
-                    <button onclick="toggleNav()" class="text-pink-500 hover:text-purple-600 mr-4 transition-colors duration-200">
+                    <button onclick="toggleNav()" class="text-blue-600 hover:text-blue-800 mr-4 transition-colors duration-200">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"/>
                         </svg>
                     </button>
-                    <h1 class="text-2xl font-bold bg-gradient-to-r from-pink-500 to-purple-600 text-transparent bg-clip-text">Destroy The RPLA (I pity the fool)</h1>
+                    <h1 class="text-2xl font-bold text-gray-800">RPLA: Cheaper Than Crashing a Plane</h1>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <div id="timer" class="text-xl font-bold text-pink-600">00:00:00</div>
-                    <div id="scoreDisplay" class="text-lg font-semibold text-purple-600">Score: 0/0</div>
+                    <div id="timer" class="text-xl font-bold text-blue-600">00:00:00</div>
+                    <div id="scoreDisplay" class="text-lg font-semibold text-blue-800">Score: 0/0</div>
                 </div>
             </div>
         </div>
 
         <!-- Progress Bar -->
         <div class="fixed top-16 w-full bg-gray-200 h-2">
-            <div id="progressBar" class="bg-gradient-to-r from-pink-500 to-purple-600 h-2 transition-all duration-300" style="width: 0%"></div>
+            <div id="progressBar" class="bg-blue-600 h-2 transition-all duration-300" style="width: 0%"></div>
         </div>
 
         <!-- Main Content Container -->
@@ -55,9 +107,9 @@
                 <div class="lg:w-2/3">
                     <div id="app" class="bg-white rounded-lg shadow-lg p-6">
                         <!-- Section Summary Card -->
-                        <div id="sectionSummary" class="mb-6 p-4 bg-pink-50 rounded-lg hidden border border-pink-200">
-                            <h3 class="text-lg font-semibold text-purple-800 mb-2">Section Summary</h3>
-                            <div id="summaryContent" class="text-sm text-pink-600"></div>
+                        <div id="sectionSummary" class="mb-6 p-4 bg-blue-50 rounded-lg hidden border border-blue-200">
+                            <h3 class="text-lg font-semibold text-blue-800 mb-2">Section Summary</h3>
+                            <div id="summaryContent" class="text-sm text-blue-600"></div>
                         </div>
 
                         <div id="sectionContainer" class="mb-4">
@@ -66,22 +118,25 @@
 
                         <div class="flex justify-between mt-6">
                             <button onclick="prevSection()" id="prevButton" 
-                                    class="flex items-center px-4 py-2 rounded gradient-bg hover-gradient text-white transition-colors duration-200">
+                                    class="flex items-center px-4 py-2 rounded bg-blue-600 hover:bg-blue-700 text-white transition-colors duration-200">
                                 ← Previous
                             </button>
                             
-                            <button onclick="checkAnswers()" 
-                                    class="px-4 py-2 bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white rounded transition-colors duration-200">
-                                Check Answers
-                            </button>
+                            <div class="check-answers-container">
+                                <img src="memes/areyousure.jpeg" alt="Are you sure?" class="floating-head shadow-lg">
+                                <button onclick="checkAnswers()" 
+                                        class="px-4 py-2 bg-green-400 hover:bg-green-500 text-white rounded transition-colors duration-200">
+                                    Are you sure?
+                                </button>
+                            </div>
 
                             <button onclick="nextSection()" id="nextButton" 
-                                    class="flex items-center px-4 py-2 rounded gradient-bg hover-gradient text-white transition-colors duration-200">
+                                    class="flex items-center px-4 py-2 rounded bg-blue-600 hover:bg-blue-700 text-white transition-colors duration-200">
                                 Next →
                             </button>
                         </div>
                         
-                        <div id="progress" class="mt-4 text-sm text-purple-600 text-center"></div>
+                        <div id="progress" class="mt-4 text-sm text-blue-600 text-center"></div>
                     </div>
                 </div>
 
@@ -94,6 +149,7 @@
             </div>
         </div>
     </div>
+
 
 
         <script>
@@ -965,12 +1021,12 @@ const categories = [
     { id: 'human', name: 'Human Factors', sections: [24, 25, 26] }
 ];
 
-// Modified category initialization to include new styling
-function initializeCategories() {
+  // Modified category initialization for aviation theme
+  function initializeCategories() {
             const categoryList = document.getElementById('categoryList');
             categories.forEach(category => {
                 const button = document.createElement('button');
-                button.className = 'w-full text-left px-4 py-2 text-white rounded transition-colors duration-200 hover-gradient';
+                button.className = 'w-full text-left px-4 py-2 text-blue-100 rounded transition-colors duration-200 nav-button';
                 button.textContent = category.name;
                 button.onclick = () => jumpToSection(category.sections[0]);
                 categoryList.appendChild(button);
